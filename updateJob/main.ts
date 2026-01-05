@@ -1,13 +1,8 @@
-import { tournamentByIdResponseSchema, tournamentsResponseSchema } from './apiTypes.ts';
+import { getStandings, getTournamentDetails, getTournaments } from './api.ts';
 
-const API_TOKEN = process.env.API_TOKEN;
-const API_URL = 'https://api.tournament.io/v1/public';
+const MONSTER_DYP = 'monster_dyp';
 
-const response = await fetch(`${API_URL}/tournaments`, {
-    headers: { Authorization: API_TOKEN },
-});
-
-const tournaments = tournamentsResponseSchema.parse(await response.json());
+const tournaments = await getTournaments();
 
 const currentYear = new Date().getFullYear();
 const currentYearTournaments = tournaments.filter((tournament) => {
@@ -18,25 +13,20 @@ const currentYearTournaments = tournaments.filter((tournament) => {
 console.log(`Found ${currentYearTournaments.length} tournaments in ${currentYear}`);
 
 const tournamentDetails = await Promise.all(
-    currentYearTournaments.map(async (tournament) => {
-        const detailResponse = await fetch(`${API_URL}/tournaments/${tournament.id}`, {
-            headers: { Authorization: API_TOKEN },
-        });
-        return tournamentByIdResponseSchema.parse(await detailResponse.json());
-    }),
+    currentYearTournaments.map(async (tournament) => getTournamentDetails(tournament.id)),
 );
-
-console.log(JSON.stringify(tournamentDetails, null, 2));
 
 const tournamentAndGroupIds = tournamentDetails
     .map((tournament) => {
-        const dypDiscipline = tournament.disciplines.find((discipline) => discipline.entryType === 'monster_dyp');
+        const dypDiscipline = tournament.disciplines.find((discipline) => discipline.entryType === MONSTER_DYP);
         if (dypDiscipline === undefined) {
+            console.log(`Ignoring tournament ${tournament.id} - did not find discipline of type ${MONSTER_DYP}`)
             return undefined;
         }
 
-        const dypGroupId = dypDiscipline.stages[0].groups.find((group) => group.tournamentMode === 'monster_dyp')?.id;
+        const dypGroupId = dypDiscipline.stages[0].groups.find((group) => group.tournamentMode === MONSTER_DYP)?.id;
         if (dypGroupId === undefined) {
+            console.log(`Ignoring tournament ${tournament.id} - did not find group of type ${MONSTER_DYP}`)
             return undefined;
         }
 
@@ -44,15 +34,8 @@ const tournamentAndGroupIds = tournamentDetails
     })
     .filter((tournamentAndGroup) => tournamentAndGroup !== undefined);
 
-
 const standings = await Promise.all(
-    tournamentAndGroupIds.map(async ([tournamentId, groupId]) => {
-        const detailResponse = await fetch(`${API_URL}/tournaments/${tournamentId}/groups/${groupId}/standings`, {
-            headers: { Authorization: API_TOKEN },
-        });
-        return await detailResponse.json();
-    }),
-)
+    tournamentAndGroupIds.map(async ([tournamentId, groupId]) => getStandings({ tournamentId, groupId })),
+);
 
 console.log(JSON.stringify(standings, null, 2));
-
