@@ -1,31 +1,68 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { type FC, Suspense, use } from 'react';
+import { type Result, resultSchema } from '../updateJob/resultType.ts';
+import { getPointsForRank } from './getPointsForRank.ts';
 
-function App() {
-    const [count, setCount] = useState(0);
+export const App: FC = () => {
+    const promise = fetch('/2026.json')
+        .then((response) => response.json())
+        .then((result) => resultSchema.parse(result));
 
     return (
-        <>
-            <div>
-                <a href='https://vite.dev' target='_blank'>
-                    <img src={viteLogo} className='logo' alt='Vite logo' />
-                </a>
-                <a href='https://react.dev' target='_blank'>
-                    <img src={reactLogo} className='logo react' alt='React logo' />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className='card'>
-                <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
-        </>
+        <Suspense fallback={'Loading...'}>
+            <YearDisplay dataPromise={promise} />
+        </Suspense>
     );
-}
+};
 
-export default App;
+type YearDisplayProps = {
+    dataPromise: Promise<Result>;
+};
+
+const YearDisplay: FC<YearDisplayProps> = ({ dataPromise }) => {
+    const response = use(dataPromise);
+
+    const pointsByPlayerId = new Map<string, { playerName: string; points: number }>();
+
+    for (const tournament of response) {
+        for (const standingsEntry of tournament.standings) {
+            let pointsEntry = pointsByPlayerId.get(standingsEntry.playerId);
+            if (pointsEntry === undefined) {
+                pointsEntry = {
+                    playerName: standingsEntry.playerName,
+                    points: 0,
+                };
+            }
+            pointsEntry.points += getPointsForRank(standingsEntry.rank);
+            pointsByPlayerId.set(standingsEntry.playerId, pointsEntry);
+        }
+    }
+
+    return <Leaderboard data={[...pointsByPlayerId.values()]} />;
+};
+
+type LeaderboardProps = {
+    data: { playerName: string; points: number }[];
+};
+
+const Leaderboard: FC<LeaderboardProps> = ({ data }) => {
+    return (
+        <table>
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {data
+                    .sort((a, b) => b.points - a.points)
+                    .map((item) => (
+                        <tr key={item.playerName}>
+                            <td>{item.playerName}</td>
+                            <td>{item.points}</td>
+                        </tr>
+                    ))}
+            </tbody>
+        </table>
+    );
+};
