@@ -1,5 +1,30 @@
 import { z } from 'zod';
 
+const groupSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    tournamentMode: z.string(),
+    state: z.string(),
+    options: z.object({
+        eliminationThirdPlace: z.boolean(),
+        // matchConfigurations: ... add when needed.
+    }),
+});
+
+const stageSchema = z.object({
+    id: z.string(),
+    state: z.string(),
+    groups: z.array(groupSchema),
+});
+
+const disciplineSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    shortName: z.string(),
+    entryType: z.string(),
+    stages: z.array(stageSchema),
+});
+
 export const tournamentsResponseSchema = z.array(
     z.object({
         id: z.string(),
@@ -8,13 +33,16 @@ export const tournamentsResponseSchema = z.array(
         state: z.string(),
         numPlayers: z.int(),
         numTeams: z.int(),
-        // disciplines: ... add when needed
+        // disciplines: ... add when needed. Seems to be a different type than what we get from /tournament/:id
     }),
 );
 
-export const tournamentByIdResponseSchema = z.array(
-    z.object({
-        id: z.string(),
-        // TODO
-    }),
-);
+export const tournamentByIdResponseSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    startTime: z.string(),
+    endTime: z.string(),
+    state: z.string(),
+    disciplines: z.array(disciplineSchema),
+});
