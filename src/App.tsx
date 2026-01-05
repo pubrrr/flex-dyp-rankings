@@ -3,7 +3,7 @@ import { type Result, resultSchema } from '../updateJob/resultType.ts';
 import { getPointsForRank } from './getPointsForRank.ts';
 
 export const App: FC = () => {
-    const promise = fetch('/2026.json')
+    const promise = fetch(`${import.meta.env.BASE_URL}/2026.json`)
         .then((response) => response.json())
         .then((result) => resultSchema.parse(result));
 
