@@ -44,4 +44,15 @@ const tournamentAndGroupIds = tournamentDetails
     })
     .filter((tournamentAndGroup) => tournamentAndGroup !== undefined);
 
-console.log(tournamentAndGroupIds);
+
+const standings = await Promise.all(
+    tournamentAndGroupIds.map(async ([tournamentId, groupId]) => {
+        const detailResponse = await fetch(`${API_URL}/tournaments/${tournamentId}/groups/${groupId}/standings`, {
+            headers: { Authorization: API_TOKEN },
+        });
+        return await detailResponse.json();
+    }),
+)
+
+console.log(JSON.stringify(standings, null, 2));
+
