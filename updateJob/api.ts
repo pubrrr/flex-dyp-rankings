@@ -1,4 +1,4 @@
-import { tournamentByIdResponseSchema, tournamentsResponseSchema } from './apiTypes.ts';
+import { standingsResponseSchema, tournamentByIdResponseSchema, tournamentsResponseSchema } from './apiTypes.ts';
 
 const API_TOKEN = process.env.API_TOKEN;
 const API_URL = 'https://api.tournament.io/v1/public';
@@ -22,5 +22,5 @@ export async function getStandings({ tournamentId, groupId }: { tournamentId: st
         `${API_URL}/tournaments/${tournamentId}/groups/${groupId}/standings`,
         AUTH_HEADERS,
     );
-    return await detailResponse.json();
+    return standingsResponseSchema.parse(await detailResponse.json());
 }

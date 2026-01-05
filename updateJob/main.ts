@@ -20,13 +20,13 @@ const tournamentAndGroupIds = tournamentDetails
     .map((tournament) => {
         const dypDiscipline = tournament.disciplines.find((discipline) => discipline.entryType === MONSTER_DYP);
         if (dypDiscipline === undefined) {
-            console.log(`Ignoring tournament ${tournament.id} - did not find discipline of type ${MONSTER_DYP}`)
+            console.log(`Ignoring tournament ${tournament.id} - did not find discipline of type ${MONSTER_DYP}`);
             return undefined;
         }
 
         const dypGroupId = dypDiscipline.stages[0].groups.find((group) => group.tournamentMode === MONSTER_DYP)?.id;
         if (dypGroupId === undefined) {
-            console.log(`Ignoring tournament ${tournament.id} - did not find group of type ${MONSTER_DYP}`)
+            console.log(`Ignoring tournament ${tournament.id} - did not find group of type ${MONSTER_DYP}`);
             return undefined;
         }
 

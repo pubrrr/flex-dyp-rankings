@@ -46,3 +46,15 @@ export const tournamentByIdResponseSchema = z.object({
     state: z.string(),
     disciplines: z.array(disciplineSchema),
 });
+
+export const standingsResponseSchema = z.array(
+    z.object({
+        id: z.string(),
+        entry: z.object({
+            id: z.string(),
+            name: z.string(),
+        }),
+        rank: z.int(), // we need this, but it's only in the response when configured in the result table in the tournament
+        // more depending on how the result table in configured in the tournament
+    }),
+);
