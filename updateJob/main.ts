@@ -1,41 +1,51 @@
 import { getStandings, getTournamentDetails, getTournaments } from './api.ts';
+import * as fs from 'node:fs';
 
 const MONSTER_DYP = 'monster_dyp';
 
 const tournaments = await getTournaments();
 
 const currentYear = new Date().getFullYear();
-const currentYearTournaments = tournaments.filter((tournament) => {
-    const tournamentYear = new Date(tournament.date).getFullYear();
-    return tournamentYear === currentYear;
-});
 
-console.log(`Found ${currentYearTournaments.length} tournaments in ${currentYear}`);
+const result = await Promise.all(
+    tournaments.flatMap(async (tournament) => {
+        const tournamentDate = new Date(tournament.date);
 
-const tournamentDetails = await Promise.all(
-    currentYearTournaments.map(async (tournament) => getTournamentDetails(tournament.id)),
-);
+        const tournamentYear = tournamentDate.getFullYear();
+        if (tournamentYear !== currentYear) {
+            return [];
+        }
 
-const tournamentAndGroupIds = tournamentDetails
-    .map((tournament) => {
-        const dypDiscipline = tournament.disciplines.find((discipline) => discipline.entryType === MONSTER_DYP);
+        console.log(`Processing tournament ${tournament.name} (${tournamentDate.toLocaleDateString('en-ca')})...`);
+
+        const tournamentDetails = await getTournamentDetails(tournament.id);
+
+        const dypDiscipline = tournamentDetails.disciplines.find((discipline) => discipline.entryType === MONSTER_DYP);
         if (dypDiscipline === undefined) {
             console.log(`Ignoring tournament ${tournament.id} - did not find discipline of type ${MONSTER_DYP}`);
-            return undefined;
+            return [];
         }
 
         const dypGroupId = dypDiscipline.stages[0].groups.find((group) => group.tournamentMode === MONSTER_DYP)?.id;
         if (dypGroupId === undefined) {
             console.log(`Ignoring tournament ${tournament.id} - did not find group of type ${MONSTER_DYP}`);
-            return undefined;
+            return [];
         }
 
-        return [tournament.id, dypGroupId] as const;
-    })
-    .filter((tournamentAndGroup) => tournamentAndGroup !== undefined);
+        const standings = await getStandings({ tournamentId: tournament.id, groupId: dypGroupId });
+        const processedStandings = standings.map((entry, index) => ({
+            playerId: entry.entry.id,
+            playerName: entry.entry.name,
+            rank: entry.rank ?? index,
+        }));
 
-const standings = await Promise.all(
-    tournamentAndGroupIds.map(async ([tournamentId, groupId]) => getStandings({ tournamentId, groupId })),
+        return {
+            name: tournament.name,
+            date: tournamentDate,
+            quarter: tournamentDate.getMonth() / 4 + 1,
+            standings: processedStandings,
+        };
+    }),
 );
 
-console.log(JSON.stringify(standings, null, 2));
+fs.writeFileSync(`../public/${currentYear}.json`, JSON.stringify(result));
