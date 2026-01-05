@@ -27,3 +27,21 @@ const tournamentDetails = await Promise.all(
 );
 
 console.log(JSON.stringify(tournamentDetails, null, 2));
+
+const tournamentAndGroupIds = tournamentDetails
+    .map((tournament) => {
+        const dypDiscipline = tournament.disciplines.find((discipline) => discipline.entryType === 'monster_dyp');
+        if (dypDiscipline === undefined) {
+            return undefined;
+        }
+
+        const dypGroupId = dypDiscipline.stages[0].groups.find((group) => group.tournamentMode === 'monster_dyp')?.id;
+        if (dypGroupId === undefined) {
+            return undefined;
+        }
+
+        return [tournament.id, dypGroupId] as const;
+    })
+    .filter((tournamentAndGroup) => tournamentAndGroup !== undefined);
+
+console.log(tournamentAndGroupIds);
