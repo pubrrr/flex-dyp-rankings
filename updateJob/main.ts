@@ -3,6 +3,7 @@ import * as fs from 'node:fs';
 import type { Result, ResultEntry } from './resultType.ts';
 
 const MONSTER_DYP = 'monster_dyp';
+const THURSDAY = 4;
 
 const tournaments = await getTournaments();
 
@@ -11,13 +12,21 @@ const currentYear = new Date().getFullYear();
 const result = await Promise.all(
     tournaments.map(async (tournament): Promise<ResultEntry | null> => {
         const tournamentDate = new Date(tournament.date);
+        tournamentDate.setUTCHours(tournamentDate.getUTCHours() + 3); // Timezone issues. The date is typically something like "2026-01-07T23:00:00.000Z". Add 3 hours to make sure it's in the next day.
+        console.log(
+            `Processing tournament ${tournament.name} (${tournamentDate.toLocaleDateString('en-ca')})... (original date: ${tournament.date})`,
+        );
 
         const tournamentYear = tournamentDate.getFullYear();
         if (tournamentYear !== currentYear) {
+            console.log(`Ignoring tournament ${tournament.id} - did not take place in current year`);
             return null;
         }
 
-        console.log(`Processing tournament ${tournament.name} (${tournamentDate.toLocaleDateString('en-ca')})...`);
+        if (tournamentDate.getUTCDay() !== THURSDAY) {
+            console.log(`Ignoring tournament ${tournament.id} - did not take place on a Thursday`);
+            return null;
+        }
 
         const tournamentDetails = await getTournamentDetails(tournament.id);
 
@@ -42,7 +51,7 @@ const result = await Promise.all(
 
         return {
             name: tournament.name,
-            date: tournamentDate.toISOString(),
+            date: tournamentDate.toLocaleDateString('en-ca'),
             quarter: Math.floor(tournamentDate.getMonth() / 4) + 1,
             standings: processedStandings,
         };
