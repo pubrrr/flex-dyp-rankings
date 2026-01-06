@@ -206,7 +206,9 @@ const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
                     ✕
                 </button>
                 <h3 className='mb-2 text-lg font-bold'>{playerName}</h3>
-                <p className='text-base-content/50 mb-2 text-sm'>Spieler ID: {selectedPlayerId}</p>
+                <p className='text-base-content/50 mb-2 overflow-x-scroll text-sm whitespace-nowrap'>
+                    Spieler ID: {selectedPlayerId}
+                </p>
                 <div className='rounded-box border-base-300 overflow-x-auto border'>
                     <table className='table'>
                         <thead>
