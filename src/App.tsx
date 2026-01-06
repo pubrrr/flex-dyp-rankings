@@ -243,7 +243,7 @@ const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
                             <tr className='bg-primary/50'>
                                 <th>Datum</th>
                                 <th className='hidden sm:block'>Turnier</th>
-                                <th className='text-right'>Platzierung</th>
+                                <th className='text-right'>Platz</th>
                                 <th className='text-right'>Punkte</th>
                             </tr>
                         </thead>
