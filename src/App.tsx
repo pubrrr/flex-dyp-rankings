@@ -20,6 +20,7 @@ const currentQuarter = getQuarter(currentDate);
 const LeaderboardContainer: FC = () => {
     const [selectedYear, setSelectedYear] = useState(currentYear.toString());
     const [selectedQuarter, setSelectedQuarter] = useState(currentQuarter);
+    const [playerNameFilter, setPlayerNameFilter] = useState('');
 
     const promise = fetch(`${import.meta.env.BASE_URL}${selectedYear}.json`)
         .then((response) => response.json())
@@ -60,9 +61,22 @@ const LeaderboardContainer: FC = () => {
                     <option value='4'>4. Quartal</option>
                 </select>
             </div>
+            <input
+                className='input mb-4'
+                placeholder='Spielernamen filtern...'
+                type='text'
+                value={playerNameFilter}
+                onChange={(event) => {
+                    setPlayerNameFilter(event.target.value);
+                }}
+            />
             <div>
                 <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
-                    <YearDisplay dataPromise={promise} selectedQuarter={selectedQuarter} />
+                    <YearDisplay
+                        dataPromise={promise}
+                        selectedQuarter={selectedQuarter}
+                        playerNameFilter={playerNameFilter}
+                    />
                 </Suspense>
             </div>
         </>
@@ -72,9 +86,10 @@ const LeaderboardContainer: FC = () => {
 type YearDisplayProps = {
     dataPromise: Promise<Result>;
     selectedQuarter: number;
+    playerNameFilter: string;
 };
 
-const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => {
+const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter, playerNameFilter }) => {
     const response = use(dataPromise);
 
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
@@ -101,7 +116,11 @@ const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => 
 
     return (
         <>
-            <LeaderboardTable data={[...pointsByPlayerId.values()]} setSelectedPlayerId={setSelectedPlayerId} />
+            <LeaderboardTable
+                data={[...pointsByPlayerId.values()]}
+                setSelectedPlayerId={setSelectedPlayerId}
+                playerNameFilter={playerNameFilter}
+            />
             <SelectedPlayerModal
                 selectedPlayerId={selectedPlayerId}
                 selectedQuarter={selectedQuarter}
@@ -115,9 +134,10 @@ const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => 
 type LeaderboardProps = {
     data: { playerName: string; playerId: string; points: number }[];
     setSelectedPlayerId: Dispatch<SetStateAction<string | null>>;
+    playerNameFilter: string;
 };
 
-const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId }) => {
+const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId, playerNameFilter }) => {
     return (
         <div className='rounded-box shadow-neutral border-base-300 overflow-x-auto border shadow'>
             <table className='table'>
@@ -134,7 +154,7 @@ const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId }) =
                         .map((item, index) => (
                             <tr
                                 key={item.playerId}
-                                className='hover:bg-base-200 cursor-pointer'
+                                className={`hover:bg-base-200 cursor-pointer ${nameMatchesFilter(item.playerName, playerNameFilter) ? '' : 'hidden'}`}
                                 onClick={() => {
                                     setSelectedPlayerId(item.playerId);
                                 }}
@@ -149,6 +169,14 @@ const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId }) =
         </div>
     );
 };
+
+function nameMatchesFilter(playerName: string, playerNameFilter: string) {
+    if (playerNameFilter.trim() === '') {
+        return true;
+    }
+
+    return playerName.toLocaleLowerCase('en-us').includes(playerNameFilter.trim().toLocaleLowerCase('en-us'));
+}
 
 type SelectedPlayerModalProps = {
     selectedPlayerId: string | null;
