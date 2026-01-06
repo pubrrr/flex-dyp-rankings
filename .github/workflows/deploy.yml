@@ -33,7 +33,7 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
       - run: npm ci
-      - run: npm run build -- --base=/flex-dyp-rankings
+      - run: npm run build -- --base=/flex-dyp-rankings/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
