@@ -2,6 +2,7 @@ import { getStandings, getTournamentDetails, getTournaments } from './api.ts';
 import * as fs from 'node:fs';
 import type { Result, ResultEntry } from './resultType.ts';
 import { getQuarter } from './getQuarter.ts';
+import { manualTournamentEntries } from './manualTournamentEntries.ts';
 
 const MONSTER_DYP = 'monster_dyp';
 const THURSDAY = 4;
@@ -61,4 +62,7 @@ const result = await Promise.all(
 
 const filteredResult: Result = result.filter<ResultEntry>((it) => it !== null);
 
-fs.writeFileSync(`../public/${currentYear}.json`, JSON.stringify(filteredResult));
+fs.writeFileSync(
+    `../public/${currentYear}.json`,
+    JSON.stringify([...filteredResult, ...(manualTournamentEntries[currentYear] ?? [])]),
+);
