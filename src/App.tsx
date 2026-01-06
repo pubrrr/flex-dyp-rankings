@@ -61,15 +61,26 @@ const LeaderboardContainer: FC = () => {
                     <option value='4'>4. Quartal</option>
                 </select>
             </div>
-            <input
-                className='input mb-4'
-                placeholder='Spielernamen filtern...'
-                type='text'
-                value={playerNameFilter}
-                onChange={(event) => {
-                    setPlayerNameFilter(event.target.value);
-                }}
-            />
+            <div className='input mb-4'>
+                <input
+                    placeholder='Spielernamen filtern...'
+                    type='text'
+                    value={playerNameFilter}
+                    onChange={(event) => {
+                        setPlayerNameFilter(event.target.value);
+                    }}
+                />
+                {playerNameFilter.trim() !== '' && (
+                    <button
+                        className='btn btn-sm btn-ghost btn-circle'
+                        onClick={() => {
+                            setPlayerNameFilter('');
+                        }}
+                    >
+                        ✕
+                    </button>
+                )}
+            </div>
             <div>
                 <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
                     <YearDisplay
