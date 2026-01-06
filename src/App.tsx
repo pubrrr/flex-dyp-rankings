@@ -46,23 +46,27 @@ type LeaderboardProps = {
 
 const Leaderboard: FC<LeaderboardProps> = ({ data }) => {
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Points</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data
-                    .sort((a, b) => b.points - a.points)
-                    .map((item) => (
-                        <tr key={item.playerName}>
-                            <td>{item.playerName}</td>
-                            <td>{item.points}</td>
-                        </tr>
-                    ))}
-            </tbody>
-        </table>
+        <div className='rounded-box shadow-neutral border-base-300 m-4 max-w-2xl overflow-x-auto border shadow'>
+            <table className='table'>
+                <thead>
+                    <tr className='bg-primary/50'>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data
+                        .sort((a, b) => b.points - a.points)
+                        .map((item, index) => (
+                            <tr key={item.playerName} className='hover:bg-base-200'>
+                                <td>#{index}</td>
+                                <td>{item.playerName}</td>
+                                <td>{item.points}</td>
+                            </tr>
+                        ))}
+                </tbody>
+            </table>
+        </div>
     );
 };

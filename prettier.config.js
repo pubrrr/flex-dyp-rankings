@@ -10,7 +10,7 @@ const config = {
     jsxSingleQuote: true,
     singleQuote: true,
     quoteProps: 'consistent',
-    plugins: [],
+    plugins: ['prettier-plugin-tailwindcss'],
     overrides: [
         {
             files: '*.astro',
