@@ -1,6 +1,7 @@
 import { type FC, Suspense, use } from 'react';
 import { type Result, resultSchema } from '../updateJob/resultType.ts';
-import { DEFAULT_POINTS, getPointsForRank, POINTS_MAP } from './getPointsForRank.ts';
+import { getPointsForRank } from './getPointsForRank.ts';
+import { PointsPerRankDisplay } from './PointsPerRankDisplay.tsx';
 
 export const App: FC = () => {
     const promise = fetch(`${import.meta.env.BASE_URL}2026.json`)
@@ -9,13 +10,7 @@ export const App: FC = () => {
 
     return (
         <div className='m-4'>
-            <details className='shadow-neutral border-base-300 collapse-arrow collapse mb-4 max-w-sm border'>
-                <summary className='collapse-title font-semibold'>Punkteschlüssel</summary>
-                <div className='collapse-content'>
-                    Die Tabelle zeigt wie viele Punkte man für welche Platzierung bekommt.
-                    <PointsPerRankTable />
-                </div>
-            </details>
+            <PointsPerRankDisplay />
             <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
                 <YearDisplay dataPromise={promise} />
             </Suspense>
@@ -46,14 +41,14 @@ const YearDisplay: FC<YearDisplayProps> = ({ dataPromise }) => {
         }
     }
 
-    return <Leaderboard data={[...pointsByPlayerId.values()]} />;
+    return <LeaderboardTable data={[...pointsByPlayerId.values()]} />;
 };
 
 type LeaderboardProps = {
     data: { playerName: string; points: number }[];
 };
 
-const Leaderboard: FC<LeaderboardProps> = ({ data }) => {
+const LeaderboardTable: FC<LeaderboardProps> = ({ data }) => {
     return (
         <>
             <h2 className='my-4 text-xl font-semibold'>Rangliste</h2>
@@ -80,32 +75,5 @@ const Leaderboard: FC<LeaderboardProps> = ({ data }) => {
                 </table>
             </div>
         </>
-    );
-};
-
-const PointsPerRankTable: FC = () => {
-    return (
-        <div className='rounded-box shadow-neutral border-base-300 m-4 max-w-sm overflow-x-auto border shadow'>
-            <table className='table'>
-                <thead>
-                    <tr className='bg-primary/50'>
-                        <th>Platzierung</th>
-                        <th>Punkte</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {[...POINTS_MAP.entries()].map(([rank, points]) => (
-                        <tr key={rank} className='hover:bg-base-200'>
-                            <td>{rank}</td>
-                            <td>{points}</td>
-                        </tr>
-                    ))}
-                    <tr className='hover:bg-base-200'>
-                        <td>&ge;{Math.max(...POINTS_MAP.keys()) + 1}</td>
-                        <td>{DEFAULT_POINTS}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     );
 };
