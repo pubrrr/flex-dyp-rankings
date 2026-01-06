@@ -2,6 +2,7 @@ import { type FC, Suspense, use, useState } from 'react';
 import { type Result, resultSchema } from '../updateJob/resultType.ts';
 import { getPointsForRank } from './getPointsForRank.ts';
 import { PointsPerRankDisplay } from './PointsPerRankDisplay.tsx';
+import { getQuarter } from '../updateJob/getQuarter.ts';
 
 export const App: FC = () => {
     return (
@@ -12,10 +13,13 @@ export const App: FC = () => {
     );
 };
 
-const currentYear = new Date().getFullYear();
+let currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+const currentQuarter = getQuarter(currentDate);
 
 const LeaderboardContainer: FC = () => {
     const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+    const [selectedQuarter, setSelectedQuarter] = useState(currentQuarter);
 
     const promise = fetch(`${import.meta.env.BASE_URL}${selectedYear}.json`)
         .then((response) => response.json())
@@ -26,23 +30,39 @@ const LeaderboardContainer: FC = () => {
     return (
         <>
             <h2 className='my-4 text-xl font-semibold'>Rangliste</h2>
-            <select
-                className='select my-4'
-                value={selectedYear}
-                onChange={(event) => {
-                    setSelectedYear(event.target.value);
-                }}
-            >
-                <option disabled>Wähle ein Jahr</option>
-                {years.map((year) => (
-                    <option key={year} value={year.toString()}>
-                        {year}
-                    </option>
-                ))}
-            </select>
+            <div>
+                <select
+                    className='select mb-4'
+                    value={selectedYear}
+                    onChange={(event) => {
+                        setSelectedYear(event.target.value);
+                    }}
+                >
+                    <option disabled>Wähle ein Jahr</option>
+                    {years.map((year) => (
+                        <option key={year} value={year.toString()}>
+                            {year}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <select
+                    className='select mb-4'
+                    value={selectedQuarter}
+                    onChange={(event) => {
+                        setSelectedQuarter(Number(event.target.value));
+                    }}
+                >
+                    <option value='1'>1. Quartal</option>
+                    <option value='2'>2. Quartal</option>
+                    <option value='3'>3. Quartal</option>
+                    <option value='4'>4. Quartal</option>
+                </select>
+            </div>
             <div>
                 <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
-                    <YearDisplay dataPromise={promise} />
+                    <YearDisplay dataPromise={promise} selectedQuarter={selectedQuarter} />
                 </Suspense>
             </div>
         </>
@@ -51,14 +71,18 @@ const LeaderboardContainer: FC = () => {
 
 type YearDisplayProps = {
     dataPromise: Promise<Result>;
+    selectedQuarter: number;
 };
 
-const YearDisplay: FC<YearDisplayProps> = ({ dataPromise }) => {
+const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => {
     const response = use(dataPromise);
 
     const pointsByPlayerId = new Map<string, { playerName: string; points: number }>();
 
     for (const tournament of response) {
+        if (tournament.quarter !== selectedQuarter) {
+            continue;
+        }
         for (const standingsEntry of tournament.standings) {
             let pointsEntry = pointsByPlayerId.get(standingsEntry.playerId);
             if (pointsEntry === undefined) {

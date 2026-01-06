@@ -1,6 +1,7 @@
 import { getStandings, getTournamentDetails, getTournaments } from './api.ts';
 import * as fs from 'node:fs';
 import type { Result, ResultEntry } from './resultType.ts';
+import { getQuarter } from './getQuarter.ts';
 
 const MONSTER_DYP = 'monster_dyp';
 const THURSDAY = 4;
@@ -52,7 +53,7 @@ const result = await Promise.all(
         return {
             name: tournament.name,
             date: tournamentDate.toLocaleDateString('en-ca'),
-            quarter: Math.floor(tournamentDate.getMonth() / 4) + 1,
+            quarter: getQuarter(tournamentDate),
             standings: processedStandings,
         };
     }),
