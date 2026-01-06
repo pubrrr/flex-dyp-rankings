@@ -1,20 +1,51 @@
-import { type FC, Suspense, use } from 'react';
+import { type FC, Suspense, use, useState } from 'react';
 import { type Result, resultSchema } from '../updateJob/resultType.ts';
 import { getPointsForRank } from './getPointsForRank.ts';
 import { PointsPerRankDisplay } from './PointsPerRankDisplay.tsx';
 
 export const App: FC = () => {
-    const promise = fetch(`${import.meta.env.BASE_URL}2026.json`)
-        .then((response) => response.json())
-        .then((result) => resultSchema.parse(result));
-
     return (
         <div className='m-4'>
             <PointsPerRankDisplay />
-            <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
-                <YearDisplay dataPromise={promise} />
-            </Suspense>
+            <LeaderboardContainer />
         </div>
+    );
+};
+
+const currentYear = new Date().getFullYear();
+
+const LeaderboardContainer: FC = () => {
+    const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+
+    const promise = fetch(`${import.meta.env.BASE_URL}${selectedYear}.json`)
+        .then((response) => response.json())
+        .then((result) => resultSchema.parse(result));
+
+    const years = Array.from({ length: currentYear - 2026 + 1 }, (_, i) => 2026 + i);
+
+    return (
+        <>
+            <h2 className='my-4 text-xl font-semibold'>Rangliste</h2>
+            <select
+                className='select my-4'
+                value={selectedYear}
+                onChange={(event) => {
+                    setSelectedYear(event.target.value);
+                }}
+            >
+                <option disabled>Wähle ein Jahr</option>
+                {years.map((year) => (
+                    <option key={year} value={year.toString()}>
+                        {year}
+                    </option>
+                ))}
+            </select>
+            <div>
+                <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
+                    <YearDisplay dataPromise={promise} />
+                </Suspense>
+            </div>
+        </>
     );
 };
 
@@ -50,30 +81,27 @@ type LeaderboardProps = {
 
 const LeaderboardTable: FC<LeaderboardProps> = ({ data }) => {
     return (
-        <>
-            <h2 className='my-4 text-xl font-semibold'>Rangliste</h2>
-            <div className='rounded-box shadow-neutral border-base-300 max-w-xl overflow-x-auto border shadow'>
-                <table className='table'>
-                    <thead>
-                        <tr className='bg-primary/50'>
-                            <th>Rang</th>
-                            <th>Spieler</th>
-                            <th>Punkte</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data
-                            .sort((a, b) => b.points - a.points)
-                            .map((item, index) => (
-                                <tr key={item.playerName} className='hover:bg-base-200'>
-                                    <td className='text-base-content/40'>#{index}</td>
-                                    <td>{item.playerName}</td>
-                                    <td>{item.points}</td>
-                                </tr>
-                            ))}
-                    </tbody>
-                </table>
-            </div>
-        </>
+        <div className='rounded-box shadow-neutral border-base-300 max-w-xl overflow-x-auto border shadow'>
+            <table className='table'>
+                <thead>
+                    <tr className='bg-primary/50'>
+                        <th>Rang</th>
+                        <th>Spieler</th>
+                        <th>Punkte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data
+                        .sort((a, b) => b.points - a.points)
+                        .map((item, index) => (
+                            <tr key={item.playerName} className='hover:bg-base-200'>
+                                <td className='text-base-content/40'>#{index + 1}</td>
+                                <td>{item.playerName}</td>
+                                <td>{item.points}</td>
+                            </tr>
+                        ))}
+                </tbody>
+            </table>
+        </div>
     );
 };
