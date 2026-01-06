@@ -13,7 +13,7 @@ export const App: FC = () => {
     );
 };
 
-let currentDate = new Date();
+const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
 const currentQuarter = getQuarter(currentDate);
 
@@ -195,8 +195,6 @@ const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
         return null;
     }
 
-    let playerName = '';
-
     const tournamentRanks = response
         .filter((tournament) => tournament.quarter === selectedQuarter)
         .map((tournament) => {
@@ -207,15 +205,16 @@ const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
                 return null;
             }
 
-            playerName = standingsEntry.playerName;
-
             return {
                 rank: standingsEntry.rank,
                 date: tournament.date,
                 name: tournament.name,
+                playerName: standingsEntry.playerName,
             };
         })
         .filter((it) => it !== null);
+
+    const playerName = tournamentRanks[0]?.playerName ?? '';
 
     return (
         <dialog
