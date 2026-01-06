@@ -1,4 +1,4 @@
-import { type FC, Suspense, use, useState } from 'react';
+import { type Dispatch, type FC, type SetStateAction, Suspense, use, useState } from 'react';
 import { type Result, resultSchema } from '../updateJob/resultType.ts';
 import { getPointsForRank } from './getPointsForRank.ts';
 import { PointsPerRankDisplay } from './PointsPerRankDisplay.tsx';
@@ -77,7 +77,9 @@ type YearDisplayProps = {
 const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => {
     const response = use(dataPromise);
 
-    const pointsByPlayerId = new Map<string, { playerName: string; points: number }>();
+    const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+
+    const pointsByPlayerId = new Map<string, { playerName: string; playerId: string; points: number }>();
 
     for (const tournament of response) {
         if (tournament.quarter !== selectedQuarter) {
@@ -88,6 +90,7 @@ const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => 
             if (pointsEntry === undefined) {
                 pointsEntry = {
                     playerName: standingsEntry.playerName,
+                    playerId: standingsEntry.playerId,
                     points: 0,
                 };
             }
@@ -96,14 +99,25 @@ const YearDisplay: FC<YearDisplayProps> = ({ dataPromise, selectedQuarter }) => 
         }
     }
 
-    return <LeaderboardTable data={[...pointsByPlayerId.values()]} />;
+    return (
+        <>
+            <LeaderboardTable data={[...pointsByPlayerId.values()]} setSelectedPlayerId={setSelectedPlayerId} />
+            <SelectedPlayerModal
+                selectedPlayerId={selectedPlayerId}
+                selectedQuarter={selectedQuarter}
+                response={response}
+                setSelectedPlayerId={setSelectedPlayerId}
+            />
+        </>
+    );
 };
 
 type LeaderboardProps = {
-    data: { playerName: string; points: number }[];
+    data: { playerName: string; playerId: string; points: number }[];
+    setSelectedPlayerId: Dispatch<SetStateAction<string | null>>;
 };
 
-const LeaderboardTable: FC<LeaderboardProps> = ({ data }) => {
+const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId }) => {
     return (
         <div className='rounded-box shadow-neutral border-base-300 max-w-xl overflow-x-auto border shadow'>
             <table className='table'>
@@ -118,7 +132,13 @@ const LeaderboardTable: FC<LeaderboardProps> = ({ data }) => {
                     {data
                         .sort((a, b) => b.points - a.points)
                         .map((item, index) => (
-                            <tr key={item.playerName} className='hover:bg-base-200'>
+                            <tr
+                                key={item.playerId}
+                                className='hover:bg-base-200 cursor-pointer'
+                                onClick={() => {
+                                    setSelectedPlayerId(item.playerId);
+                                }}
+                            >
                                 <td className='text-base-content/40'>#{index + 1}</td>
                                 <td>{item.playerName}</td>
                                 <td>{item.points}</td>
@@ -127,5 +147,98 @@ const LeaderboardTable: FC<LeaderboardProps> = ({ data }) => {
                 </tbody>
             </table>
         </div>
+    );
+};
+
+type SelectedPlayerModalProps = {
+    selectedPlayerId: string | null;
+    selectedQuarter: number;
+    response: Result;
+    setSelectedPlayerId: Dispatch<SetStateAction<string | null>>;
+};
+
+const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
+    selectedPlayerId,
+    selectedQuarter,
+    response,
+    setSelectedPlayerId,
+}) => {
+    if (selectedPlayerId === null) {
+        return null;
+    }
+
+    let playerName = '';
+
+    const tournamentRanks = response
+        .filter((tournament) => tournament.quarter === selectedQuarter)
+        .map((tournament) => {
+            const standingsEntry = tournament.standings.find(
+                (standingsEntry) => standingsEntry.playerId === selectedPlayerId,
+            );
+            if (standingsEntry === undefined) {
+                return null;
+            }
+
+            playerName = standingsEntry.playerName;
+
+            return {
+                rank: standingsEntry.rank,
+                date: tournament.date,
+                name: tournament.name,
+            };
+        })
+        .filter((it) => it !== null);
+
+    return (
+        <dialog
+            className='modal modal-open'
+            onClose={() => {
+                console.log('closed');
+            }}
+        >
+            <div className='modal-box'>
+                <button
+                    className='btn btn-sm btn-circle btn-ghost absolute top-4 right-4'
+                    onClick={() => {
+                        setSelectedPlayerId(null);
+                    }}
+                >
+                    ✕
+                </button>
+                <h3 className='mb-2 text-lg font-bold'>{playerName}</h3>
+                <p className='text-base-content/50 mb-2 text-sm'>Spieler ID: {selectedPlayerId}</p>
+                <div className='rounded-box border-base-300 overflow-x-auto border'>
+                    <table className='table'>
+                        <thead>
+                            <tr className='bg-primary/50'>
+                                <th>Datum</th>
+                                <th className='hidden sm:block'>Turnier</th>
+                                <th className='text-right'>Platzierung</th>
+                                <th className='text-right'>Punkte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tournamentRanks.map((item) => (
+                                <tr key={item.name} className='hover:bg-base-200'>
+                                    <td>{item.date}</td>
+                                    <td className='hidden sm:block'>{item.name}</td>
+                                    <td className='text-right'>{item.rank}</td>
+                                    <td className='text-right'>{getPointsForRank(item.rank)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className='modal-backdrop'>
+                <button
+                    onClick={() => {
+                        setSelectedPlayerId(null);
+                    }}
+                >
+                    close modal
+                </button>
+            </div>
+        </dialog>
     );
 };

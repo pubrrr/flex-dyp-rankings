@@ -6,7 +6,7 @@ export const PointsPerRankDisplay: FC = () => {
         <details className='border-base-300 collapse-arrow shadow-neutral collapse mb-4 max-w-sm border shadow'>
             <summary className='collapse-title font-semibold'>Punkteschlüssel</summary>
             <div className='collapse-content'>
-                Die Tabelle zeigt wie viele Punkte man für welche Platzierung bekommt.
+                <span className='text-sm'>Die Tabelle zeigt wie viele Punkte man für welche Platzierung bekommt.</span>
                 <PointsPerRankTable />
             </div>
         </details>
