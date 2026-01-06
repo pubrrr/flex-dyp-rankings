@@ -6,7 +6,7 @@ import { getQuarter } from '../updateJob/getQuarter.ts';
 
 export const App: FC = () => {
     return (
-        <div className='m-4'>
+        <div className='mx-auto max-w-2xl p-4'>
             <PointsPerRankDisplay />
             <LeaderboardContainer />
         </div>
@@ -119,7 +119,7 @@ type LeaderboardProps = {
 
 const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId }) => {
     return (
-        <div className='rounded-box shadow-neutral border-base-300 max-w-xl overflow-x-auto border shadow'>
+        <div className='rounded-box shadow-neutral border-base-300 overflow-x-auto border shadow'>
             <table className='table'>
                 <thead>
                     <tr className='bg-primary/50'>
