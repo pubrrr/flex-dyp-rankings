@@ -8,9 +8,18 @@ export const App: FC = () => {
         .then((result) => resultSchema.parse(result));
 
     return (
-        <Suspense fallback={'Loading...'}>
-            <YearDisplay dataPromise={promise} />
-        </Suspense>
+        <div className='m-4'>
+            <details className='shadow-neutral border-base-300 collapse-arrow collapse mb-4 max-w-sm border'>
+                <summary className='collapse-title font-semibold'>Punkteschlüssel</summary>
+                <div className='collapse-content'>
+                    Die Tabelle zeigt wie viele Punkte man für welche Platzierung bekommt.
+                    <PointsPerRankTable />
+                </div>
+            </details>
+            <Suspense fallback={<span className='loading loading-dots loading-md'></span>}>
+                <YearDisplay dataPromise={promise} />
+            </Suspense>
+        </div>
     );
 };
 
@@ -37,18 +46,7 @@ const YearDisplay: FC<YearDisplayProps> = ({ dataPromise }) => {
         }
     }
 
-    return (
-        <div className='m-4'>
-            <details className='shadow-neutral border-base-300 collapse-arrow collapse mb-4 max-w-sm border'>
-                <summary className='collapse-title font-semibold'>Punkteschlüssel</summary>
-                <div className='collapse-content'>
-                    Die Tabelle zeigt wie viele Punkte man für welche Platzierung bekommt.
-                    <PointsPerRankTable />
-                </div>
-            </details>
-            <Leaderboard data={[...pointsByPlayerId.values()]} />
-        </div>
-    );
+    return <Leaderboard data={[...pointsByPlayerId.values()]} />;
 };
 
 type LeaderboardProps = {
