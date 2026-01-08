@@ -4,9 +4,11 @@ import { DEFAULT_POINTS, POINTS_MAP } from './getPointsForRank.ts';
 export const PointsPerRankDisplay: FC = () => {
     return (
         <details className='border-base-300 collapse-arrow shadow-neutral collapse mb-4 border shadow'>
-            <summary className='collapse-title font-semibold'>Punkteschlüssel</summary>
+            <summary className='collapse-title px-4 py-3 text-sm font-semibold'>Punkteschlüssel</summary>
             <div className='collapse-content'>
-                <span className='text-sm'>Die Tabelle zeigt wie viele Punkte man für welche Platzierung bekommt.</span>
+                <span className='text-sm'>
+                    Die Tabelle zeigt wie viele Punkte man bei einer Teilnahme für welche Platzierung bekommt.
+                </span>
                 <PointsPerRankTable />
             </div>
         </details>
