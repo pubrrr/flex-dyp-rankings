@@ -2,10 +2,16 @@ import { type FC, Suspense, use, useState } from 'react';
 import { type Result, resultSchema } from '../updateJob/resultType.ts';
 import { QuarterlyLeaderboard } from './QuarterlyLeaderboard.tsx';
 import { IronTrophyLeaderboard } from './IronTrophyLeaderboard.tsx';
+import { GitHubIcon } from './GitHubIcon.tsx';
 
 export const App: FC = () => {
     return (
         <div className='mx-auto max-w-2xl p-4'>
+            <div className='flex justify-end gap-2'>
+                <a href='https://github.com/pubrrr/flex-dyp-rankings' className='float-end size-6'>
+                    <GitHubIcon />
+                </a>
+            </div>
             <h1 className='mb-6 text-center text-xl font-bold'>Flex DYP Ranglisten</h1>
             <LeaderboardContainer />
         </div>
