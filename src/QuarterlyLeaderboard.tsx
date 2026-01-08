@@ -40,7 +40,7 @@ export const QuarterlyLeaderboard: FC<QuarterlyLeaderboardProps> = ({ response, 
     return (
         <>
             <p className='mb-4'>
-                Den Quartalspokal bekommt, wer am Ende des Quartals die meisten Punkte gesammelt hat.
+                Den Quartalspokal bekommt, wer am Ende eines Quartals die meisten Punkte gesammelt hat.
             </p>
 
             <PointsPerRankDisplay />
@@ -59,6 +59,8 @@ export const QuarterlyLeaderboard: FC<QuarterlyLeaderboardProps> = ({ response, 
                     <option value='4'>4. Quartal</option>
                 </select>
             </div>
+
+            <p className='text-base-content/40 mb-2 text-xs'>Klicke auf einen Spielernamen für Details.</p>
 
             <LeaderboardTable
                 data={[...pointsByPlayerId.values()]}

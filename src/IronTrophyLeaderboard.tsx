@@ -51,6 +51,8 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
                 drei Plätze belegt hat.
             </p>
 
+            <p className='text-base-content/40 mb-2 text-xs'>Klicke auf einen Spielernamen für Details.</p>
+
             <div className='rounded-box shadow-neutral border-base-300 overflow-x-auto border shadow'>
                 <table className='table'>
                     <thead>
