@@ -52,10 +52,7 @@ export const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
                 <h3 className='mb-2 text-lg font-bold'>{playerName}</h3>
                 {selectedQuarter !== null && <p className='mb-2'>{selectedQuarter}. Quartal</p>}
 
-                <p className='text-base-content/50 mb-2 overflow-x-scroll text-sm whitespace-nowrap'>
-                    Spieler ID: {selectedPlayerId}
-                </p>
-                <div className='rounded-box border-base-300 overflow-x-auto border'>
+                <div className='rounded-box border-base-300 mb-2 overflow-x-auto border'>
                     <table className='table'>
                         <thead>
                             <tr className='bg-primary/50'>
@@ -75,6 +72,10 @@ export const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
                         </tbody>
                     </table>
                 </div>
+
+                <p className='text-base-content/50 overflow-x-scroll text-xs whitespace-nowrap'>
+                    Spieler ID: {selectedPlayerId}
+                </p>
             </div>
             <div className='modal-backdrop'>
                 <button
