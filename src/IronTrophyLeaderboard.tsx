@@ -59,6 +59,14 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
                         </tr>
                     </thead>
                     <tbody>
+                        {data.length === 0 && (
+                            <tr>
+                                <td colSpan={4} className='text-center'>
+                                    Keine Daten
+                                </td>
+                            </tr>
+                        )}
+
                         {data.map((item, index) => (
                             <tr
                                 key={item.playerName}

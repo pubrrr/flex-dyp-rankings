@@ -88,6 +88,13 @@ const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId, pla
                     </tr>
                 </thead>
                 <tbody>
+                    {data.length === 0 && (
+                        <tr>
+                            <td colSpan={4} className='text-center'>
+                                Keine Daten
+                            </td>
+                        </tr>
+                    )}
                     {data
                         .sort((a, b) => b.points - a.points)
                         .map((item, index) => (
