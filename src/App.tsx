@@ -103,7 +103,6 @@ const Leaderboards: FC<LeaderboardsProps> = ({ dataPromise, playerNameFilter }) 
             <label className='tab flex flex-row items-center'>
                 <input type='radio' name='tabs' />
                 <span className='icon-[mdi--information-outline] mr-1 size-5'></span>
-                Wertung
             </label>
             <div className='tab-content bg-base-100 border-base-300'>
                 <RatingExplanation />
