@@ -90,7 +90,7 @@ const LeaderboardTable: FC<LeaderboardProps> = ({ data, setSelectedPlayerId, pla
                 <tbody>
                     {data.length === 0 && (
                         <tr>
-                            <td colSpan={4} className='text-center'>
+                            <td colSpan={3} className='text-center'>
                                 Keine Daten
                             </td>
                         </tr>
