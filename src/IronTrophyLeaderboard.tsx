@@ -55,7 +55,7 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
                             <th>Rang</th>
                             <th>Spieler</th>
                             <th className='text-right'># Teilnahmen</th>
-                            <th className='text-right'>Ø Platzierung</th>
+                            <th className='text-right'>Ø Platz</th>
                         </tr>
                     </thead>
                     <tbody>
