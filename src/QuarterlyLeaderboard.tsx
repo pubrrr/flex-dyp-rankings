@@ -3,7 +3,6 @@ import { type Result } from '../updateJob/resultType.ts';
 import { getPointsForRank } from './getPointsForRank.ts';
 import { SelectedPlayerModal } from './SelectedPlayerModal.tsx';
 import { getQuarter } from '../updateJob/getQuarter.ts';
-import { PointsPerRankDisplay } from './PointsPerRankDisplay.tsx';
 import { nameMatchesFilter } from './nameMatchesFilter.tsx';
 
 type QuarterlyLeaderboardProps = {
