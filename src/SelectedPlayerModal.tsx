@@ -31,7 +31,6 @@ export const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
             return {
                 rank: standingsEntry.rank,
                 date: tournament.date,
-                name: tournament.name,
                 playerName: standingsEntry.playerName,
             };
         })
@@ -61,16 +60,14 @@ export const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
                         <thead>
                             <tr className='bg-primary/50'>
                                 <th>Datum</th>
-                                <th className='hidden sm:block'>Turnier</th>
                                 <th className='text-right'>Platz</th>
                                 <th className='text-right'>Punkte</th>
                             </tr>
                         </thead>
                         <tbody>
                             {tournamentRanks.map((item) => (
-                                <tr key={item.name} className='hover:bg-base-200'>
+                                <tr key={item.date} className='hover:bg-base-200'>
                                     <td>{item.date}</td>
-                                    <td className='hidden sm:block'>{item.name}</td>
                                     <td className='text-right'>{item.rank}</td>
                                     <td className='text-right'>{getPointsForRank(item.rank)}</td>
                                 </tr>
