@@ -3,6 +3,7 @@ import { type Result, resultSchema } from '../updateJob/resultType.ts';
 import { QuarterlyLeaderboard } from './QuarterlyLeaderboard.tsx';
 import { IronTrophyLeaderboard } from './IronTrophyLeaderboard.tsx';
 import { GitHubIcon } from './GitHubIcon.tsx';
+import { PointsPerRankDisplay } from './PointsPerRankDisplay.tsx';
 
 export const App: FC = () => {
     return (
@@ -90,15 +91,39 @@ const Leaderboards: FC<LeaderboardsProps> = ({ dataPromise, playerNameFilter }) 
 
     return (
         <div className='tabs tabs-lift'>
-            <input type='radio' name='my_tabs_3' className='tab' aria-label='Quartalspokal' defaultChecked />
+            <input type='radio' name='tabs' className='tab' aria-label='Quartalspokal' defaultChecked />
             <div className='tab-content bg-base-100 border-base-300 p-6'>
                 <QuarterlyLeaderboard response={response} playerNameFilter={playerNameFilter} />
             </div>
 
-            <input type='radio' name='my_tabs_3' className='tab' aria-label='Eiserner Pokal' />
+            <input type='radio' name='tabs' className='tab' aria-label='Eiserner Pokal' />
             <div className='tab-content bg-base-100 border-base-300 p-6'>
                 <IronTrophyLeaderboard response={response} playerNameFilter={playerNameFilter} />
             </div>
+
+            <label className='tab flex flex-row items-center'>
+                <input type='radio' name='tabs' />
+                <span className='icon-[mdi--information-outline] mr-1 size-5'></span>
+                Wertung
+            </label>
+            <div className='tab-content bg-base-100 border-base-300 p-6'>
+                <RatingExplanation />
+            </div>
         </div>
+    );
+};
+
+const RatingExplanation: FC = () => {
+    return (
+        <>
+            <p className='mb-4'>
+                Den Quartalspokal bekommt, wer am Ende eines Quartals die meisten Punkte gesammelt hat.
+            </p>
+            <PointsPerRankDisplay />
+            <p>
+                Den eisernen Pokal bekommt, wer am Ende des Jahres die meisten Teilnahmen hat, aber nie einen der ersten
+                drei Plätze belegt hat.
+            </p>
+        </>
     );
 };

@@ -46,11 +46,6 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
 
     return (
         <>
-            <p className='mb-4'>
-                Den eisernen Pokal bekommt, wer am Ende des Jahres die meisten Teilnahmen hat, aber nie einen der ersten
-                drei Plätze belegt hat.
-            </p>
-
             <p className='text-base-content/40 mb-2 text-xs'>Klicke auf einen Spielernamen für Details.</p>
 
             <div className='rounded-box shadow-neutral border-base-300 overflow-x-auto border shadow'>

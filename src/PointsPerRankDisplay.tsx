@@ -7,7 +7,8 @@ export const PointsPerRankDisplay: FC = () => {
             <summary className='collapse-title px-4 py-3 text-sm font-semibold'>Punkteschlüssel</summary>
             <div className='collapse-content'>
                 <span className='text-sm'>
-                    Die Tabelle zeigt wie viele Punkte man bei einer Teilnahme für welche Platzierung bekommt.
+                    Die Tabelle zeigt wie viele Punkte für den Quartalspokal man bei einer Teilnahme für welche
+                    Platzierung bekommt.
                 </span>
                 <PointsPerRankTable />
             </div>
