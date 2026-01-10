@@ -37,7 +37,7 @@ export const QuarterlyLeaderboard: FC<QuarterlyLeaderboardProps> = ({ response, 
     }
 
     return (
-        <>
+        <div className='px-2 py-4'>
             <div>
                 <select
                     className='select mb-4'
@@ -66,7 +66,7 @@ export const QuarterlyLeaderboard: FC<QuarterlyLeaderboardProps> = ({ response, 
                 response={response}
                 setSelectedPlayerId={setSelectedPlayerId}
             />
-        </>
+        </div>
     );
 };
 

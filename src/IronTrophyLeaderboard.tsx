@@ -45,7 +45,7 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
         });
 
     return (
-        <>
+        <div className='px-2 py-4'>
             <p className='text-base-content/40 mb-2 text-xs'>Klicke auf einen Spielernamen für Details.</p>
 
             <div className='rounded-box shadow-neutral border-base-300 overflow-x-auto border shadow'>
@@ -83,6 +83,6 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
                 response={response}
                 setSelectedPlayerId={setSelectedPlayerId}
             />
-        </>
+        </div>
     );
 };

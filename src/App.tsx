@@ -33,9 +33,9 @@ const LeaderboardContainer: FC = () => {
 
     return (
         <>
-            <div>
+            <div className='mb-4 flex gap-2'>
                 <select
-                    className='select mb-4'
+                    className='select w-20 shrink-0'
                     value={selectedYear}
                     onChange={(event) => {
                         setSelectedYear(event.target.value);
@@ -48,27 +48,27 @@ const LeaderboardContainer: FC = () => {
                         </option>
                     ))}
                 </select>
-            </div>
 
-            <div className='input mb-4'>
-                <input
-                    placeholder='Spielernamen filtern...'
-                    type='text'
-                    value={playerNameFilter}
-                    onChange={(event) => {
-                        setPlayerNameFilter(event.target.value);
-                    }}
-                />
-                {playerNameFilter.trim() !== '' && (
-                    <button
-                        className='btn btn-sm btn-ghost btn-circle'
-                        onClick={() => {
-                            setPlayerNameFilter('');
+                <div className='input grow'>
+                    <input
+                        placeholder='Spieler filtern...'
+                        type='text'
+                        value={playerNameFilter}
+                        onChange={(event) => {
+                            setPlayerNameFilter(event.target.value);
                         }}
-                    >
-                        ✕
-                    </button>
-                )}
+                    />
+                    {playerNameFilter.trim() !== '' && (
+                        <button
+                            className='btn btn-sm btn-ghost btn-circle'
+                            onClick={() => {
+                                setPlayerNameFilter('');
+                            }}
+                        >
+                            ✕
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div>
@@ -91,12 +91,12 @@ const Leaderboards: FC<LeaderboardsProps> = ({ dataPromise, playerNameFilter }) 
     return (
         <div className='tabs tabs-lift'>
             <input type='radio' name='tabs' className='tab' aria-label='Quartalspokal' defaultChecked />
-            <div className='tab-content bg-base-100 border-base-300 p-6'>
+            <div className='tab-content bg-base-100 border-base-300'>
                 <QuarterlyLeaderboard response={response} playerNameFilter={playerNameFilter} />
             </div>
 
             <input type='radio' name='tabs' className='tab' aria-label='Eiserner Pokal' />
-            <div className='tab-content bg-base-100 border-base-300 p-6'>
+            <div className='tab-content bg-base-100 border-base-300'>
                 <IronTrophyLeaderboard response={response} playerNameFilter={playerNameFilter} />
             </div>
 
@@ -105,7 +105,7 @@ const Leaderboards: FC<LeaderboardsProps> = ({ dataPromise, playerNameFilter }) 
                 <span className='icon-[mdi--information-outline] mr-1 size-5'></span>
                 Wertung
             </label>
-            <div className='tab-content bg-base-100 border-base-300 p-6'>
+            <div className='tab-content bg-base-100 border-base-300'>
                 <RatingExplanation />
             </div>
         </div>
@@ -114,7 +114,7 @@ const Leaderboards: FC<LeaderboardsProps> = ({ dataPromise, playerNameFilter }) 
 
 const RatingExplanation: FC = () => {
     return (
-        <>
+        <div className='p-4'>
             <p className='mb-4'>
                 Den Quartalspokal bekommt, wer am Ende eines Quartals die meisten Punkte gesammelt hat.
             </p>
@@ -123,6 +123,6 @@ const RatingExplanation: FC = () => {
                 Den eisernen Pokal bekommt, wer am Ende des Jahres die meisten Teilnahmen hat, aber nie einen der ersten
                 drei Plätze belegt hat.
             </p>
-        </>
+        </div>
     );
 };
