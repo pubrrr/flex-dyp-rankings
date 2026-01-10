@@ -47,7 +47,7 @@ const result = await Promise.all(
         const standings = await getStandings({ tournamentId: tournament.id, groupId: dypGroupId });
         const processedStandings = standings.map((entry, index) => ({
             playerId: entry.entry.id,
-            playerName: entry.entry.name,
+            playerName: entry.entry.name.trim(),
             rank: entry.rank ?? index,
         }));
 
