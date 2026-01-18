@@ -41,7 +41,7 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
                 return b.participations - a.participations;
             }
 
-            return a.averageRank - b.averageRank;
+            return b.averageRank - a.averageRank;
         });
 
     return (
