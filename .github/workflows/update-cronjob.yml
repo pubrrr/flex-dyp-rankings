@@ -1,0 +1,43 @@
+name: Auto Update Script
+
+on:
+  schedule:
+    - cron: '0 4 * * 5' # 04:00 on Fridays
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run update script
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: npx tsx updateJob/main.ts
+
+      - name: Commit and push if changed
+        run: |
+          echo "git status:"
+          git status
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo
+          echo "git add:"
+          git add -v -A public/
+          echo
+          echo "git commit and push:"
+          git diff --staged --quiet || (git commit -v -m "chore: auto-update ranking files" && git push)

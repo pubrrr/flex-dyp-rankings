@@ -63,6 +63,6 @@ const result = await Promise.all(
 const filteredResult: Result = result.filter<ResultEntry>((it) => it !== null);
 
 fs.writeFileSync(
-    `../public/${currentYear}.json`,
+    `./public/${currentYear}.json`,
     JSON.stringify([...filteredResult, ...(manualTournamentEntries[currentYear] ?? [])]),
 );
