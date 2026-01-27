@@ -23,6 +23,10 @@ export const QuarterlyLeaderboard: FC<QuarterlyLeaderboardProps> = ({ response, 
             continue;
         }
         for (const standingsEntry of tournament.standings) {
+            if (!standingsEntry.playerId?.toString().startsWith('player-')) {
+                // Exclude guests
+                continue;
+            }
             let pointsEntry = pointsByPlayerId.get(standingsEntry.playerId);
             if (pointsEntry === undefined) {
                 pointsEntry = {
