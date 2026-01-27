@@ -15,6 +15,10 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
 
     for (const tournament of response) {
         for (const standingsEntry of tournament.standings) {
+            if (!standingsEntry.playerId?.toString().startsWith('player-')) {
+                // Exclude guests
+                continue;
+            }
             let pointsEntry = ranksByPlayerId.get(standingsEntry.playerId);
             if (pointsEntry === undefined) {
                 pointsEntry = {
