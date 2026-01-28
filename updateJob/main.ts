@@ -28,12 +28,12 @@ const result = await Promise.all(
         const quarter = allowedMap.get(tournamentMidnightUTC);
         if (quarter === undefined) {
             console.log(
-                `Ignoring tournament ${tournament.id} - date ${new Date(tournamentMidnightUTC).toISOString().slice(0, 10)} not in allowed list.`,
+                `Ignoring tournament ${tournament.id} - date ${tournamentDate.toLocaleDateString('en-ca')} not in allowed list.`,
             );
             return null;
         }
         console.log(
-            `Processing tournament ${tournament.name} (${tournamentDate.toISOString().slice(0,10)})... (original date: ${tournament.date})`,
+            `Processing tournament ${tournament.name} (${tournamentDate.toLocaleDateString('en-ca')})... (original date: ${tournament.date})`,
         );
 
         const tournamentDetails = await getTournamentDetails(tournament.id);
@@ -59,7 +59,7 @@ const result = await Promise.all(
 
         return {
             name: tournament.name,
-            date: tournamentDate.toISOString().slice(0,10),
+            date: tournamentDate.toLocaleDateString('en-ca'),
             quarter: quarter,
             standings: processedStandings,
         };
