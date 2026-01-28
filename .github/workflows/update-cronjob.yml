@@ -40,4 +40,9 @@ jobs:
           git add -v -A public/
           echo
           echo "git commit and push:"
-          git diff --staged --quiet || (git commit -v -m "chore: auto-update ranking files" && git push)
+          git diff --staged --quiet || (git commit -v -m "chore: auto-update ranking files")
+      - name: Push changes
+        uses: ad-m/github-push-action@1
+        with:
+          github_token: ${{ secrets.PAT }}
+          branch: main
