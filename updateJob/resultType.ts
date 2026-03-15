@@ -15,6 +15,9 @@ export const resultEntrySchema = z.object({
 
 export type ResultEntry = z.infer<typeof resultEntrySchema>;
 
-export const resultSchema = z.array(resultEntrySchema);
+export const resultSchema = z.object({
+    updated: z.string(),
+    results: z.array(resultEntrySchema),
+});
 
 export type Result = z.infer<typeof resultSchema>;

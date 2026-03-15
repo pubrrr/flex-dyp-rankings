@@ -10,7 +10,8 @@ const allowedMap = new Map<number, number>(tournamentDates.map((d) => [d.date.ge
 
 const tournaments = await getTournaments();
 
-const currentYear = new Date().getFullYear();
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
 
 const result = await Promise.all(
     tournaments.map(async (tournament): Promise<ResultEntry | null> => {
@@ -66,6 +67,10 @@ const result = await Promise.all(
     }),
 );
 
-const filteredResult: Result = result.filter<ResultEntry>((it) => it !== null);
+const filteredResult: Result = {
+    updated: currentDate.toLocaleString('de'),
+    results: result.filter<ResultEntry>((it) => it !== null),
+};
+
 const publicDir = path.join(process.cwd(), 'public');
 fs.writeFileSync(path.join(publicDir, `${currentYear}.json`), JSON.stringify(filteredResult));

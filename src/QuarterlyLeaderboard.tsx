@@ -18,7 +18,7 @@ export const QuarterlyLeaderboard: FC<QuarterlyLeaderboardProps> = ({ response, 
 
     const pointsByPlayerId = new Map<string, { playerName: string; playerId: string; points: number }>();
 
-    for (const tournament of response) {
+    for (const tournament of response.results) {
         if (tournament.quarter !== selectedQuarter) {
             continue;
         }

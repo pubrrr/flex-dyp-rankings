@@ -89,25 +89,28 @@ const Leaderboards: FC<LeaderboardsProps> = ({ dataPromise, playerNameFilter }) 
     const response = use(dataPromise);
 
     return (
-        <div className='tabs tabs-lift'>
-            <input type='radio' name='tabs' className='tab' aria-label='Quartalspokal' defaultChecked />
-            <div className='tab-content bg-base-100 border-base-300'>
-                <QuarterlyLeaderboard response={response} playerNameFilter={playerNameFilter} />
-            </div>
+        <>
+            <div className='tabs tabs-lift'>
+                <input type='radio' name='tabs' className='tab' aria-label='Quartalspokal' defaultChecked />
+                <div className='tab-content bg-base-100 border-base-300'>
+                    <QuarterlyLeaderboard response={response} playerNameFilter={playerNameFilter} />
+                </div>
 
-            <input type='radio' name='tabs' className='tab' aria-label='Eiserner Pokal' />
-            <div className='tab-content bg-base-100 border-base-300'>
-                <IronTrophyLeaderboard response={response} playerNameFilter={playerNameFilter} />
-            </div>
+                <input type='radio' name='tabs' className='tab' aria-label='Eiserner Pokal' />
+                <div className='tab-content bg-base-100 border-base-300'>
+                    <IronTrophyLeaderboard response={response} playerNameFilter={playerNameFilter} />
+                </div>
 
-            <label className='tab flex flex-row items-center'>
-                <input type='radio' name='tabs' />
-                <span className='icon-[mdi--information-outline] mr-1 size-5'></span>
-            </label>
-            <div className='tab-content bg-base-100 border-base-300'>
-                <RatingExplanation />
+                <label className='tab flex flex-row items-center'>
+                    <input type='radio' name='tabs' />
+                    <span className='icon-[mdi--information-outline] mr-1 size-5'></span>
+                </label>
+                <div className='tab-content bg-base-100 border-base-300'>
+                    <RatingExplanation />
+                </div>
             </div>
-        </div>
+            <p className='text-base-content/40 m-2 text-xs'>Zuletzt aktualisiert: {response.updated}</p>
+        </>
     );
 };
 

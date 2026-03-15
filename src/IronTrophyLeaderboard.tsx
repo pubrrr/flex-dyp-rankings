@@ -13,7 +13,7 @@ export const IronTrophyLeaderboard: FC<IronTrophyLeaderboardProps> = ({ response
 
     const ranksByPlayerId = new Map<string, { playerName: string; playerId: string; ranks: number[] }>();
 
-    for (const tournament of response) {
+    for (const tournament of response.results) {
         for (const standingsEntry of tournament.standings) {
             if (!standingsEntry.playerId?.toString().startsWith('player-')) {
                 // Exclude guests
