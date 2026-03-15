@@ -18,7 +18,7 @@ export const SelectedPlayerModal: FC<SelectedPlayerModalProps> = ({
         return null;
     }
 
-    const tournamentRanks = response
+    const tournamentRanks = response.results
         .filter((tournament) => selectedQuarter === null || tournament.quarter === selectedQuarter)
         .map((tournament) => {
             const standingsEntry = tournament.standings.find(
