@@ -6,9 +6,11 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "lint": "eslint flex-dyp-rankings",
         "preview": "vite preview",
-        "format": "eslint . --fix && prettier --write \"./**/*.{ts,tsx,json,astro,md,mdx,mjs,cjs,js}\""
+        "format": "eslint . --fix && prettier --write \"./**/*.{ts,tsx,json,astro,md,mdx,mjs,cjs,js}\"",
+        "check-format": "prettier --check \"**/*.{ts,tsx,json,astro,md,mdx,mjs,cjs}\"",
+        "check-types": "tsc --noEmit",
+        "check-lint": "eslint ."
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.18",
