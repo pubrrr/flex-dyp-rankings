@@ -13,7 +13,7 @@
         "check-lint": "eslint ."
     },
     "dependencies": {
-        "@tailwindcss/vite": "^4.2.2",
+        "@tailwindcss/vite": "^4.2.4",
         "daisyui": "^5.5.19",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
@@ -35,10 +35,10 @@
         "eslint-plugin-react-refresh": "^0.5.2",
         "globals": "^16.5.0",
         "prettier": "^3.8.3",
-        "prettier-plugin-tailwindcss": "^0.7.2",
+        "prettier-plugin-tailwindcss": "^0.7.3",
         "tsx": "^4.21.0",
         "typescript": "~6.0.3",
         "typescript-eslint": "^8.58.2",
-        "vite": "^8.0.8"
+        "vite": "^8.0.10"
     }
 }
